@@ -18,16 +18,13 @@ public class XiaoQuNameMapper extends Mapper<LongWritable, Text, Text, IntWritab
 
     @Override
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        StringTokenizer itr = new StringTokenizer(value.toString());
-        while (itr.hasMoreTokens()) {
-            String line = itr.nextToken();
-            if (line.contains("postHouse, saleHouseVo")){
-                String subLine = line.split("postHouse, saleHouseVo:")[1];
-                SaleHouseVo saleHouseVo = JSON.parseObject(subLine, SaleHouseVo.class);
-                if (StringUtils.isNotEmpty(saleHouseVo.getXiaoqu())) {
-                    word.set(saleHouseVo.getClientId());
-                    context.write(word, one);
-                }
+        String line = value.toString();
+        if (line.contains("postHouse, saleHouseVo")){
+            String subLine = line.split("postHouse, saleHouseVo:")[1];
+            SaleHouseVo saleHouseVo = JSON.parseObject(subLine, SaleHouseVo.class);
+            if (StringUtils.isNotEmpty(saleHouseVo.getXiaoqu())) {
+                word.set(saleHouseVo.getClientId());
+                context.write(word, one);
             }
         }
     }
